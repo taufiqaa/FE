@@ -116,7 +116,7 @@ function Cart() {
               <div className="data-cart">
                 <div className="data-flavour-cart">
                   <div className="menu-title-cart">
-                    <h6>{data?.product?.title}</h6>
+                    <h6>{Image}</h6>
                   </div>
                   <div className="data-price-cart">
                     <h6>Rp {data?.sub_amount}</h6>

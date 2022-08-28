@@ -15,9 +15,35 @@ function DetailProduct() {
   const params = useParams();
   const id = params.id;
 
-  // topping Set
+  const [product, setProduct] = useState([])
+  const [toppings, setToppings] = useState([])
+
   const [topping, setTopping] = useState([]);
-  const [toppingID, settoppingID] = useState ([]);
+  const [toppingID, setToppingID] = useState ([]);
+
+  const getProduct = async () => {
+    try {
+      const res = await API.get(`/product/${id}`);
+      setProduct(res.data.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const getToppings = async () => {
+    try {
+      const res = await API.get(`/toppings`);
+      setToppings(res.data.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  let ToppingTotal = topping.reduce((a, b) => {
+    return a + parseInt(b);
+  }, 0);
+
+  let sub_amount = product?.price + ToppingTotal;
 
   const handleChange = (e) => {
     let updateTopping = [...topping];
@@ -27,39 +53,15 @@ function DetailProduct() {
       updateTopping.splice(topping.indexOf(e.target.value));
     }
     setTopping(updateTopping);
-  
 
-  // const name = id;
-
-  let toppingId = [...toppingID];
+    let toppingId = [...toppingID];
     if (e.target.checked) {
       toppingId = [...toppingID, parseInt(e.target.name)];
     } else {
       toppingId.splice(toppingID.indexOf(e.target.name));
     }
-    settoppingID(toppingId);
+    setToppingID(toppingId);
   };
-
-  console.log(toppingID)
-
-  let { data: product } = useQuery('productCache', async () => {
-    const res = await API.get(`/product/${id}`)
-    // console.log(res);
-    return res.data.data
-  })
-
-  let { data: toppings } = useQuery('toppingsCache', async () => {
-    const response = await API.get('/toppings');
-    // console.log(response)
-    return response.data.data;
-  });
-
-  // tambah price
-  let ToppingTotal = topping.reduce((a, b) => {
-    return a + parseInt(b);
-  }, 0);
-
-  let sub_amount = product?.price + ToppingTotal;
 
   const handleSubmit = useMutation(async (e) => {
     try {
@@ -89,9 +91,11 @@ function DetailProduct() {
   useEffect(() => {
     if (state.isLogin === false || state.user.status === "admin") {
       navigate('/')
+    } else {
+      getProduct()
+      getToppings()
     }
-  }, [state])
-
+  },[])
   return (
     <>
     <Header />

@@ -41,7 +41,13 @@ export default function Header() {
     const response = await API.get("/carts");
     return response.data.data;
   });
-  
+
+  React.useEffect(() => {
+    if (state.isLogin === true) {
+      setModalLogin(false)
+      setModalRegister(false)
+    }
+  },[state])
   return (
     <header className="fixed z-index-2 w100">
       <nav className="py2 px6 flex jc-between ai-center bg-white">
