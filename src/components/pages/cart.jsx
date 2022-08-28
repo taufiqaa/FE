@@ -74,7 +74,7 @@ function Cart() {
       },
     });
   });
-//
+
 
   useEffect(() => {
     //change this to the script source you want to load, for example this is snap.js sandbox env
